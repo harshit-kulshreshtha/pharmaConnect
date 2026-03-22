@@ -1,0 +1,21 @@
+import mongoose from "mongoose";
+
+const OrderSchema = new mongoose.Schema(
+  {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    items: [
+      {
+        medicineId: { type: mongoose.Schema.Types.ObjectId, ref: "Medicine" },
+        name: String,
+        price: Number,
+        quantity: Number,
+      },
+    ],
+    totalAmount: Number,
+    deliveryAddress: String,
+    status: { type: String, default: "CONFIRMED" },
+  },
+  { timestamps: true }
+);
+
+export default mongoose.models.Order || mongoose.model("Order", OrderSchema);
