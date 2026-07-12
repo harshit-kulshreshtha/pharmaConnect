@@ -2,7 +2,7 @@ import "./globals.css";
 import { AuthProvider } from "../context/AuthContext";
 import { CartProvider } from "../context/CartContext";
 import { ToastProvider } from "../context/ToastContext";
-import Navbar from "../components/navbar";
+import Navbar from "../components/Navbar";
 import ToastContainer from "../components/ToastContainer";
 
 export const metadata = {
