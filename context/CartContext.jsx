@@ -18,10 +18,10 @@ export function CartProvider({ children }) {
 
   const addToCart = (medicine) => {
     setCart((prev) => {
-      const existing = prev.find((i) => i.id === medicine.id);
+      const existing = prev.find((i) => i._id === medicine._id);
       if (existing) {
         return prev.map((i) =>
-          i.id === medicine.id ? { ...i, quantity: i.quantity + 1 } : i
+          i._id === medicine._id ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
       return [...prev, { ...medicine, quantity: 1 }];
@@ -32,14 +32,14 @@ export function CartProvider({ children }) {
     setCart((prev) =>
       prev
         .map((i) =>
-          i.id === id ? { ...i, quantity: i.quantity - 1 } : i
+          i._id === id ? { ...i, quantity: i.quantity - 1 } : i
         )
         .filter((i) => i.quantity > 0)
     );
   };
 
   const getItemQuantity = (id) => {
-    const item = cart.find((i) => i.id === id);
+    const item = cart.find((i) => i._id === id);
     return item ? item.quantity : 0;
   };
 

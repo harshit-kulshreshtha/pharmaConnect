@@ -6,7 +6,7 @@ export default function MedicineCard({ medicine }) {
   const { addToCart, removeFromCart, getItemQuantity } = useCart();
   const router = useRouter();
 
-  const count = getItemQuantity(medicine.id);
+  const count = getItemQuantity(medicine._id);
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition">
@@ -25,7 +25,7 @@ export default function MedicineCard({ medicine }) {
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center bg-gray-100 rounded-lg px-3 py-2">
             <button
-              onClick={() => removeFromCart(medicine.id)}
+              onClick={() => removeFromCart(medicine._id)}
               className="text-xl font-bold text-blue-600 px-2"
             >
               –

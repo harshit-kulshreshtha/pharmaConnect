@@ -1,29 +1,53 @@
-let medicines = [
-    { id: 1, name: "Paracetamol 500mg", price: 25, category: "Pain Relief" },
-    { id: 2, name: "Amoxicillin 250mg", price: 45, category: "Antibiotic" },
-    { id: 3, name: "Cetirizine 10mg", price: 15, category: "Allergy" },
-  ];
-  
-  export async function GET() {
+import { connectDB } from "../../../lib/mongodb";
+import Medicine from "../../../models/Medicine";
+
+export async function GET(request) {
+  try {
+    await connectDB();
+    const url = new URL(request.url);
+    const q = url.searchParams.get("q") || "";
+    const category = url.searchParams.get("category") || "";
+
+    const filter = {};
+    if (q) filter.name = { $regex: q, $options: "i" };
+    if (category) filter.category = category;
+
+    const medicines = await Medicine.find(filter).sort({ createdAt: -1 });
     return Response.json(medicines);
+  } catch (err) {
+    return Response.json({ message: err.message }, { status: 500 });
   }
-  
-  export async function POST(request) {
+}     
+
+export async function POST(request) {
+  try {
+    await connectDB();
     const body = await request.json();
-    const newMed = { id: Date.now(), ...body };
-    medicines.push(newMed);
-    return Response.json(newMed, { status: 201 });
+    const medicine = await Medicine.create(body);
+    return Response.json(medicine, { status: 201 });
+  } catch (err) {
+    return Response.json({ message: err.message }, { status: 500 });
   }
-  
-  export async function PUT(request) {
-    const updated = await request.json();
-    medicines = medicines.map((m) => (m.id === updated.id ? updated : m));
+}
+
+export async function PUT(request) {
+  try {
+    await connectDB();
+    const body = await request.json();
+    const updated = await Medicine.findByIdAndUpdate(body._id, body, { new: true });
     return Response.json(updated);
+  } catch (err) {
+    return Response.json({ message: err.message }, { status: 500 });
   }
-  
-  export async function DELETE(request) {
+}
+
+export async function DELETE(request) {
+  try {
+    await connectDB();
     const { id } = await request.json();
-    medicines = medicines.filter((m) => m.id !== id);
+    await Medicine.findByIdAndDelete(id);
     return Response.json({ success: true });
+  } catch (err) {
+    return Response.json({ message: err.message }, { status: 500 });
   }
-  
+}

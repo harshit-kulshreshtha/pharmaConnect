@@ -2,13 +2,12 @@ import mongoose from "mongoose";
 
 const MedicineSchema = new mongoose.Schema(
   {
-    _id: ObjectId,
     name: String,
     description: String,
     price: Number,
     stock: Number,
-    createdBy: ObjectId, // admin user id
-    createdAt: Date
+    category: { type: String, default: "" },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );

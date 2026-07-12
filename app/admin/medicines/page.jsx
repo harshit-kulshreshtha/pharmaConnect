@@ -39,13 +39,13 @@ export default function AdminMedicines() {
         </thead>
         <tbody>
           {medicines.map((m) => (
-            <tr key={m.id}>
+            <tr key={m._id}>
               <td className="border px-4 py-2">{m.name}</td>
               <td className="border px-4 py-2">{m.category}</td>
               <td className="border px-4 py-2">₹{m.price}</td>
               <td className="border px-4 py-2 text-center">
                 <button
-                  onClick={() => handleDelete(m.id)}
+                  onClick={() => handleDelete(m._id)}
                   className="bg-red-500 text-white px-3 py-1 rounded"
                 >
                   Delete

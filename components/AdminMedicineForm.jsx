@@ -6,9 +6,11 @@ export default function AdminMedicineForm({ onSave }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const payload = { ...form, price: Number(form.price) };
     await fetch("/api/medicines", {
       method: "POST",
-      body: JSON.stringify(form),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     });
     setForm({ name: "", price: "", category: "" });
     onSave();

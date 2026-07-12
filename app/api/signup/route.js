@@ -17,8 +17,14 @@ export async function POST(req) {
     const user = await User.create({
       firstName: body.firstName,
       lastName: body.lastName,
-      dob: body.dob,
-      phone: body.phone,
+      dob: body.dob || "",
+      phone: body.phone || "",
+      address: {
+        line1: body.addressLine1 || "",
+        city: body.addressCity || "",
+        state: body.addressState || "",
+        zip: body.addressZip || ""
+      },
       email: body.email,
       password: hashedPassword,
       role: "user"
@@ -26,7 +32,12 @@ export async function POST(req) {
 
     return Response.json({
       id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
+      dob: user.dob,
+      phone: user.phone,
+      address: user.address,
       role: user.role
     });
   } catch (err) {

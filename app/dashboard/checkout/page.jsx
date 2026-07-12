@@ -1,20 +1,24 @@
 "use client";
 import { useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
+import { useToast } from "../../../context/ToastContext";
 import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
   const { user, updateDeliveryAddress  } = useAuth();
+  const { addToast } = useToast();
   const router = useRouter();
-  const [address, setAddress] = useState(user?.address || "");
+  const [address, setAddress] = useState(
+    user?.deliveryAddress || (user?.address ? `${user.address.line1}\n${user.address.city}, ${user.address.state} - ${user.address.zip}` : "")
+  );
 
   const placeOrder = () => {
     // Later: create Firestore order doc
     const updatedUser = { ...user, deliveryAddress: address };
     updateDeliveryAddress(address);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-    alert("Order placed successfully!");
-    router.push("/dashboard/confirmation");
+    localStorage.setItem("pharmaUser", JSON.stringify(updatedUser));
+    addToast("Order placed successfully!", "success");
+    setTimeout(() => router.push("/dashboard/confirmation"), 500);
   };
 
   return (

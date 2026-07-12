@@ -29,8 +29,11 @@
     ".next\\dev/types/**/*.ts",
     "**/*.mts",
     "**/*.ts",
-    "**/*.tsx"
-, "app/dashboard/checkout/page.jsx"  ],
+    "**/*.tsx",
+    "app/dashboard/checkout/page.jsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
   "exclude": [
     "node_modules"
   ]

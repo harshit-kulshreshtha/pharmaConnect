@@ -20,9 +20,12 @@ export async function POST(req) {
     return Response.json({
       id: user._id,
       firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
-      role: user.role,
-      address: user.address || ""
+      dob: user.dob || "",
+      phone: user.phone || "",
+      address: user.address || { line1: "", city: "", state: "", zip: "" },
+      role: user.role
     });
   } catch (err) {
     return Response.json({ message: err.message }, { status: 500 });

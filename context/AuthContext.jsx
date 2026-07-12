@@ -33,18 +33,23 @@ export const AuthProvider = ({ children }) => {
   };
   
 
-  // ✅ SIGNUP FUNCTION
+  // ✅ SIGNUP FUNCTION - saves MongoDB user data
   const signup = (data) => {
+    // Save the actual MongoDB user data from API response
     const newUser = {
-      uid: "LOCAL-" + Date.now(),
+      id: data.id, // MongoDB ObjectId from API
       firstName: data.firstName,
       lastName: data.lastName,
-      dob: data.dob,
-      phone: data.phone,
       email: data.email,
-      role: "user", // ✅ always user signup (admin created manually)
-      address: data.address || "",
-      deliveryAddress: "",
+      dob: data.dob || "",
+      phone: data.phone || "",
+      address: data.address || { line1: "", city: "", state: "", zip: "" },
+      role: data.role || "user",
+      // keep a stringified deliveryAddress for compatibility
+      deliveryAddress:
+        data.address && typeof data.address === "object"
+          ? `${data.address.line1}\n${data.address.city}, ${data.address.state} - ${data.address.zip}`
+          : data.address || "",
     };
 
     setUser(newUser);
@@ -56,7 +61,14 @@ export const AuthProvider = ({ children }) => {
 
   // ✅ UPDATE ADDRESS (for profile edit or signup)
   const updateAddress = (address) => {
-    const updated = { ...user, address };
+    const updated = {
+      ...user,
+      address: address || { line1: "", city: "", state: "", zip: "" },
+      deliveryAddress:
+        address && typeof address === "object"
+          ? `${address.line1}\n${address.city}, ${address.state} - ${address.zip}`
+          : address || "",
+    };
     setUser(updated);
     localStorage.setItem("pharmaUser", JSON.stringify(updated));
   };
