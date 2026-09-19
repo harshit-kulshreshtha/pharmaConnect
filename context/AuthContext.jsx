@@ -8,21 +8,38 @@ export const AuthProvider = ({ children }) => {
   const router = useRouter();
   const SESSION_DURATION = 30 * 60 * 1000; // 30 mins
 
-  const [user, setUser] = useState(null);
+  const getStoredUser = () => {
+    if (typeof window === "undefined") return null;
+
+    try {
+      const savedUser = localStorage.getItem("pharmaUser");
+      const loginTime = localStorage.getItem("pharmaLoginTime");
+
+      if (!savedUser || !loginTime) return null;
+
+      const now = Date.now();
+      if (now - Number(loginTime) > SESSION_DURATION) {
+        localStorage.removeItem("pharmaUser");
+        localStorage.removeItem("pharmaLoginTime");
+        return null;
+      }
+
+      return JSON.parse(savedUser);
+    } catch (err) {
+      console.error("Error reading user session:", err);
+      localStorage.removeItem("pharmaUser");
+      localStorage.removeItem("pharmaLoginTime");
+      return null;
+    }
+  };
+
+  const [user, setUser] = useState(() => getStoredUser());
+  const [isLoading, setIsLoading] = useState(true);
 
   // Load session from localStorage
   useEffect(() => {
-    const savedUser = localStorage.getItem("pharmaUser");
-    const loginTime = localStorage.getItem("pharmaLoginTime");
-
-    if (savedUser && loginTime) {
-      const now = Date.now();
-      if (now - loginTime > SESSION_DURATION) {
-        logout();
-      } else {
-        setUser(JSON.parse(savedUser));
-      }
-    }
+    setUser(getStoredUser());
+    setIsLoading(false);
   }, []);
 
   // ✅ LOGIN FUNCTION (must receive role or infer based on email)
@@ -92,6 +109,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
+        isLoading,
         login,
         signup,
         logout,

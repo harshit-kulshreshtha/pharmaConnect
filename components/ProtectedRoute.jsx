@@ -4,13 +4,25 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function ProtectedRoute({ children, role }) {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) router.push("/auth/login");
-    if (role && user?.role !== role) router.push("/dashboard");
-  }, [user]);
+    if (isLoading) return;
+
+    if (!user) {
+      router.push("/auth/login");
+      return;
+    }
+
+    if (role && user?.role !== role) {
+      router.push("/dashboard");
+    }
+  }, [user, isLoading, role, router]);
+
+  if (isLoading) {
+    return null;
+  }
 
   return children;
 }
