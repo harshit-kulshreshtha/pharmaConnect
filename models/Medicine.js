@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import "./User";
 
 const MedicineSchema = new mongoose.Schema(
   {

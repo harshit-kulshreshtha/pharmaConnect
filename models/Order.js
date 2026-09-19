@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import "./User";
+import "./Medicine";
 
 const OrderSchema = new mongoose.Schema(
   {
